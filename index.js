@@ -23,12 +23,20 @@ async function run() {
     await client.connect();
     const database = client.db("carMechanic");
     const servicesCollection = database.collection("service");
+
+    app.get("/services", async (req, res) => {
+      const cursor = servicesCollection.find({});
+      const services = await cursor.toArray();
+      res.send(services);
+    });
+
     // POST API
-    app.post("/service", async (req, res) => {
+    app.post("/services", async (req, res) => {
       const service = req.body;
       console.log("hit the post api", service);
-      //   const result = await servicesCollection.insertOne(service);
-      res.send("hitted the post");
+      const result = await servicesCollection.insertOne(service);
+      console.log(result);
+      res.json(result);
     });
   } finally {
   }
